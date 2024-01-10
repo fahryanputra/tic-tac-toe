@@ -1,4 +1,4 @@
-// Create Gameboard factory function
+// Create Gameboard module
 const GameBoard = (function() {
     const row = 3
     const column = 3
@@ -19,12 +19,28 @@ const GameBoard = (function() {
     return {getBoard};
 })();
 
+// Create createPlayer factory function
+function createPlayer(name, token) {
+    const getName = () => name; 
+    const getToken = () => token
+
+    return {getName, getToken};
+};
+
 // Create GameController factory function
-const GameController = function() {
+function GameController() {
+    // Ask for players name
+    const playerOneName = prompt("Enter player one name: ");
+    const playerTwoName = prompt("Enter player two name: ");
 
+    // Create array of players
+    const players = [];
+    players.push(createPlayer(playerOneName, "X"));
+    players.push(createPlayer(playerTwoName, "O"));
+
+    const getPlayers = () => players;
+
+    return {getPlayers};
 };
 
-// Create Player factory function
-const Player = function() {
-
-};
+const game = GameController();
