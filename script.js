@@ -1,14 +1,13 @@
 // Create Gameboard module
 const GameBoard = (function() {
-    const row = 3
-    const column = 3
+    const size = 3
     const board = []
 
     // Create 2D array for the game board
     // 2D array consists of 3 rows and 3 columns
-    for(let i = 0; i < row; i++) {
+    for(let i = 0; i < size; i++) {
         board[i] = []
-        for(let j = 0; j < column; j++) {
+        for(let j = 0; j < size; j++) {
             board[i].push(".")
         }
     }
@@ -23,21 +22,21 @@ const GameBoard = (function() {
 function createPlayer(name, token) {
     // Method to getting player name and token
     const getName = () => name; 
-    const getToken = () => token
+    const getToken = () => token;
 
     return {getName, getToken};
 };
 
-// Create GameController factory function
+// Create GameController function
 function GameController() {
     // Ask for players name
-    const playerOneName = prompt("Enter player one name: ");
-    const playerTwoName = prompt("Enter player two name: ");
+    const playerOneName = "Player One";
+    const playerTwoName = "Player Two";
 
     // Create array of players
     const players = [];
-    players.push(createPlayer(playerOneName, "X"));
-    players.push(createPlayer(playerTwoName, "O"));
+    players.push(createPlayer(playerOneName, 1));
+    players.push(createPlayer(playerTwoName, -1));
 
     // Create game board
     let gameBoard = GameBoard.getBoard();
@@ -46,28 +45,86 @@ function GameController() {
     let activePlayer = players[0];
     const switchPlayer = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
-    }
+        console.log(`${activePlayer.getName()}'s Turn!`);
+    };
 
     // Game turn and update board each turn
     const updateBoard = () => {
         console.log(gameBoard);
-        console.log(`${activePlayer.getName()}'s Turn!`);
-    }
+    };
 
     // Gameplay function
-    const playRound = () => {
+    const playRound = (playRow, playColumn) => {
         // Get input from user to select cell
-        const row = prompt("Enter row: ");
-        const column = prompt ("Enter column: ");
+        const row = playRow;
+        const column = playColumn;
 
         // Fill selected cell to active player's token
         gameBoard[row][column] = activePlayer.getToken();
+
+        // Check if anyone is winning
+        const Winner = (array) => {
+            let winner = false;
+            
+            // Check winner function
+            // Check winner in horizontal and vertical direction
+            function checkWinnerLateral(isRow) {
+                for(let i = 0; i < array.length; i++) {
+                    let sum = 0;
+                    for(let j = 0; j < array[i].length; j++) {
+                        isRow === true ? sum += array[i][j] : sum += array[j][i];
+                    };
+                    if(sum === array.length) {
+                        winner = players[0].getName();
+                    } else if (sum === -array.length) {
+                        winner = players[1].getName();
+                    }
+                };
+            }
+
+            // Check winner in diagonal direction
+            function checkWinnerDiagonal(isDown) {
+                let sum = 0;
+                for(let i = 0; i < array.length; i++) {
+                    isDown === true ? sum += array[i][i] : sum += array[(array.length - 1) - i][i];
+                }
+                if(sum === array.length) {
+                    winner = players[0].getName();
+                } else if (sum === -array.length) {
+                    winner = players[1].getName();
+                }
+            }
+            
+
+            // Check winning row and column
+            // true = horizontal
+            // false = vertical
+            checkWinnerLateral(true);
+            checkWinnerLateral(false);
+
+            // Check winning diagonals
+            // true = diagonal down
+            // false = diagonal up
+            checkWinnerDiagonal(true);
+            checkWinnerDiagonal(false);
+
+            // Get winner's name
+            const getWinner = () => winner;
+
+            return {getWinner};
+        };
         
-        switchPlayer();
-        updateBoard();
-    }
+        if(Winner(gameBoard).getWinner() === false) {
+            updateBoard();
+            switchPlayer();
+        } else {
+            updateBoard();
+            console.log(`The winner is ${Winner(gameBoard).getWinner()}!`)
+        }
+    };
 
     updateBoard();
+    console.log(`${activePlayer.getName()}'s Turn!`);
 
     return {playRound};
 };
