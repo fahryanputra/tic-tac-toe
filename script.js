@@ -48,14 +48,28 @@ function GameController() {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
 
-    // Method to getting players array
-    const getPlayers = () => players;
-    // Method to getting game board
-    const getBoard = () => gameBoard;
-    // Method to getting active player
-    const getActivePlayer = () => activePlayer;
+    // Game turn and update board each turn
+    const updateBoard = () => {
+        console.log(gameBoard);
+        console.log(`${activePlayer.getName()}'s Turn!`);
+    }
 
-    return {getPlayers, getBoard, getActivePlayer};
+    // Gameplay function
+    const playRound = () => {
+        // Get input from user to select cell
+        const row = prompt("Enter row: ");
+        const column = prompt ("Enter column: ");
+
+        // Fill selected cell to active player's token
+        gameBoard[row][column] = activePlayer.getToken();
+        
+        switchPlayer();
+        updateBoard();
+    }
+
+    updateBoard();
+
+    return {playRound};
 };
 
 const game = GameController();
