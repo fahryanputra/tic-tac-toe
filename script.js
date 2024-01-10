@@ -21,6 +21,7 @@ const GameBoard = (function() {
 
 // Create createPlayer factory function
 function createPlayer(name, token) {
+    // Method to getting player name and token
     const getName = () => name; 
     const getToken = () => token
 
@@ -38,9 +39,23 @@ function GameController() {
     players.push(createPlayer(playerOneName, "X"));
     players.push(createPlayer(playerTwoName, "O"));
 
-    const getPlayers = () => players;
+    // Create game board
+    let gameBoard = GameBoard.getBoard();
 
-    return {getPlayers};
+    // Set turn between players
+    let activePlayer = players[0];
+    const switchPlayer = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+    }
+
+    // Method to getting players array
+    const getPlayers = () => players;
+    // Method to getting game board
+    const getBoard = () => gameBoard;
+    // Method to getting active player
+    const getActivePlayer = () => activePlayer;
+
+    return {getPlayers, getBoard, getActivePlayer};
 };
 
 const game = GameController();
