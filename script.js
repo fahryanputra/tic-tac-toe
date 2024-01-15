@@ -12,10 +12,12 @@ const GameBoard = (function() {
         }
     }
 
+    // Method to getting the board size
+    const getSize = () => size;
     // Method to getting the game board
     const getBoard = () => board;
 
-    return {getBoard};
+    return {getSize, getBoard};
 })();
 
 // Create createPlayer factory function
@@ -32,7 +34,9 @@ function GameController() {
     // Ask for players name
     const playerOneName = "Player One";
     const playerTwoName = "Player Two";
-
+    // Keep track of rounds
+    let round = 0;
+    
     // Create array of players
     const players = [];
     players.push(createPlayer(playerOneName, 1));
@@ -59,14 +63,15 @@ function GameController() {
         const row = playRow;
         const column = playColumn;
 
-        // Fill selected cell to active player's token
+        // Fill selected cell with active player's token
         gameBoard[row][column] = activePlayer.getToken();
+        // Count up the round number
+        round++;
 
         // Check if anyone is winning
         const Winner = (array) => {
             let winner = false;
             
-            // Check winner function
             // Check winner in horizontal and vertical direction
             function checkWinnerLateral(isRow) {
                 for(let i = 0; i < array.length; i++) {
@@ -95,7 +100,6 @@ function GameController() {
                 }
             }
             
-
             // Check winning row and column
             // true = horizontal
             // false = vertical
@@ -114,13 +118,19 @@ function GameController() {
             return {getWinner};
         };
         
-        if(Winner(gameBoard).getWinner() === false) {
-            updateBoard();
-            switchPlayer();
+        let winningPlayer = Winner(gameBoard).getWinner();
+        if(winningPlayer === false) {
+            if(round < (GameBoard.getSize()**2)) {
+                updateBoard();
+                switchPlayer();
+            } else {
+                updateBoard();
+                console.log("Draw!");
+            };
         } else {
             updateBoard();
-            console.log(`The winner is ${Winner(gameBoard).getWinner()}!`)
-        }
+            console.log(`The winner is ${winningPlayer}!`)
+        };
     };
 
     updateBoard();
