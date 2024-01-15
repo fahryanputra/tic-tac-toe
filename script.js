@@ -118,19 +118,24 @@ function GameController() {
             return {getWinner};
         };
         
-        let winningPlayer = Winner(gameBoard).getWinner();
-        if(winningPlayer === false) {
-            if(round < (GameBoard.getSize()**2)) {
-                updateBoard();
-                switchPlayer();
+        // Ending the game if winner found or the board is filled without a winner
+        const checkWinner = (winner) => {
+            if(winner === false) {
+                if(round < (GameBoard.getSize()**2)) {
+                    updateBoard();
+                    switchPlayer();
+                } else {
+                    updateBoard();
+                    console.log("Draw!");
+                };
             } else {
                 updateBoard();
-                console.log("Draw!");
+                console.log(`The winner is ${winner}!`)
             };
-        } else {
-            updateBoard();
-            console.log(`The winner is ${winningPlayer}!`)
         };
+
+        let winner = Winner(gameBoard).getWinner();
+        checkWinner(winner);
     };
 
     updateBoard();
