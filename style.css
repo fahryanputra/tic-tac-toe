@@ -1,0 +1,12 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.board-container {
+    width: 10rem;
+    height: 10rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}

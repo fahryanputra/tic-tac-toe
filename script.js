@@ -8,7 +8,7 @@ const GameBoard = (function() {
     for(let i = 0; i < size; i++) {
         board[i] = []
         for(let j = 0; j < size; j++) {
-            board[i].push(".")
+            board[i].push(".");
         }
     }
 
@@ -19,6 +19,25 @@ const GameBoard = (function() {
 
     return {getSize, getBoard};
 })();
+
+function DisplayController(array) {
+    const game = GameController();
+    const container = document.querySelector(".board-container");
+
+    for(let i = 0; i < array.length; i++) {
+        for(let j = 0; j < array[i].length; j++) {
+            const markerButton = document.createElement("button");
+
+            markerButton.addEventListener("click", () => {
+                markerButton.textContent = game.getActivePlayer().getToken();
+                game.playRound(i, j);
+                markerButton.disabled = true;
+            });
+
+            container.appendChild(markerButton);
+        }
+    }
+};
 
 // Create createPlayer factory function
 function createPlayer(name, token) {
@@ -137,11 +156,14 @@ function GameController() {
         let winner = Winner(gameBoard).getWinner();
         checkWinner(winner);
     };
-
+    
     updateBoard();
     console.log(`${activePlayer.getName()}'s Turn!`);
 
-    return {playRound};
+    // Method to getting active player
+    const getActivePlayer = () => activePlayer;
+    
+    return {playRound, getActivePlayer};
 };
 
-const game = GameController();
+const display = DisplayController(GameBoard.getBoard());
