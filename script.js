@@ -20,23 +20,34 @@ const GameBoard = (function() {
     return {getSize, getBoard};
 })();
 
-function DisplayController(array) {
-    const game = GameController();
+function DisplayController(gameBoard) {
+    const game = GameController(gameBoard);
     const container = document.querySelector(".board-container");
 
-    for(let i = 0; i < array.length; i++) {
-        for(let j = 0; j < array[i].length; j++) {
+    for(let i = 0; i < gameBoard.length; i++) {
+        for(let j = 0; j < gameBoard[i].length; j++) {
+            // Display the game board
             const markerButton = document.createElement("button");
 
             markerButton.addEventListener("click", () => {
+                // Mark the board with player marker
                 markerButton.textContent = game.getActivePlayer().getMarker();
+                // Run the game logic
                 game.playRound(i, j);
+                // Disable the button afterwards
                 markerButton.disabled = true;
+
+                // Check for winner
+                if(game.getWinner() !== false) {
+                    const winnerText = document.querySelector(".winner-text");
+                    winnerText.textContent = `The winner is ${game.getWinner()}!`;
+                };
             });
 
             container.appendChild(markerButton);
         }
     }
+
 };
 
 // Create createPlayer factory function
@@ -50,20 +61,19 @@ function createPlayer(name, token, marker) {
 };
 
 // Create GameController function
-function GameController() {
+function GameController(gameBoard) {
     // Ask for players name
     const playerOneName = "Player One";
     const playerTwoName = "Player Two";
     // Keep track of rounds
     let round = 0;
+    // Initialize winner to false
+    let winner = false;
     
     // Create array of players
     const players = [];
     players.push(createPlayer(playerOneName, 1, "X"));
     players.push(createPlayer(playerTwoName, -1, "O"));
-
-    // Create game board
-    let gameBoard = GameBoard.getBoard();
 
     // Set turn between players
     let activePlayer = players[0];
@@ -89,9 +99,7 @@ function GameController() {
         round++;
 
         // Check if anyone is winning
-        const Winner = (array) => {
-            let winner = false;
-            
+        const Winner = (array) => {            
             // Check winner in horizontal and vertical direction
             function checkWinnerLateral(isRow) {
                 for(let i = 0; i < array.length; i++) {
@@ -154,7 +162,7 @@ function GameController() {
             };
         };
 
-        let winner = Winner(gameBoard).getWinner();
+        winner = Winner(gameBoard).getWinner();
         checkWinner(winner);
     };
     
@@ -163,8 +171,11 @@ function GameController() {
 
     // Method to getting active player
     const getActivePlayer = () => activePlayer;
+    // Method to getting the winner
+    const getWinner = () => winner;
     
-    return {playRound, getActivePlayer};
+    return {playRound, getActivePlayer, getWinner};
 };
 
-const display = DisplayController(GameBoard.getBoard());
+const gameBoard = GameBoard.getBoard();
+const display = DisplayController(gameBoard);
