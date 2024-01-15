@@ -29,7 +29,7 @@ function DisplayController(array) {
             const markerButton = document.createElement("button");
 
             markerButton.addEventListener("click", () => {
-                markerButton.textContent = game.getActivePlayer().getToken();
+                markerButton.textContent = game.getActivePlayer().getMarker();
                 game.playRound(i, j);
                 markerButton.disabled = true;
             });
@@ -40,12 +40,13 @@ function DisplayController(array) {
 };
 
 // Create createPlayer factory function
-function createPlayer(name, token) {
+function createPlayer(name, token, marker) {
     // Method to getting player name and token
     const getName = () => name; 
     const getToken = () => token;
+    const getMarker = () => marker;
 
-    return {getName, getToken};
+    return {getName, getToken, getMarker};
 };
 
 // Create GameController function
@@ -58,8 +59,8 @@ function GameController() {
     
     // Create array of players
     const players = [];
-    players.push(createPlayer(playerOneName, 1));
-    players.push(createPlayer(playerTwoName, -1));
+    players.push(createPlayer(playerOneName, 1, "X"));
+    players.push(createPlayer(playerTwoName, -1, "O"));
 
     // Create game board
     let gameBoard = GameBoard.getBoard();
