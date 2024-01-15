@@ -40,7 +40,7 @@ function DisplayController(gameBoard) {
                 // Check for winner
                 if(game.getWinner() !== false) {
                     const winnerText = document.querySelector(".winner-text");
-                    winnerText.textContent = `The winner is ${game.getWinner()}!`;
+                    winnerText.textContent = game.getWinner();
                 };
             });
 
@@ -108,9 +108,9 @@ function GameController(gameBoard) {
                         isRow === true ? sum += array[i][j] : sum += array[j][i];
                     };
                     if(sum === array.length) {
-                        winner = players[0].getName();
+                        winner = `The winner is ${players[0].getName()}!`;
                     } else if (sum === -array.length) {
-                        winner = players[1].getName();
+                        winner = `The winner is ${players[1].getName()}!`;
                     }
                 };
             }
@@ -122,23 +122,28 @@ function GameController(gameBoard) {
                     isDown === true ? sum += array[i][i] : sum += array[(array.length - 1) - i][i];
                 }
                 if(sum === array.length) {
-                    winner = players[0].getName();
+                    winner = `The winner is ${players[0].getName()}!`;
                 } else if (sum === -array.length) {
-                    winner = players[1].getName();
+                    winner = `The winner is ${players[1].getName()}!`;
                 }
             }
             
-            // Check winning row and column
-            // true = horizontal
-            // false = vertical
-            checkWinnerLateral(true);
-            checkWinnerLateral(false);
+            if(round < GameBoard.getSize() ** 2) {
+                // Check winning row and column
+                // true = horizontal
+                // false = vertical
+                checkWinnerLateral(true);
+                checkWinnerLateral(false);
+    
+                // Check winning diagonals
+                // true = diagonal down
+                // false = diagonal up
+                checkWinnerDiagonal(true);
+                checkWinnerDiagonal(false);
+            } else {
+                winner = "Draw!";
+            }
 
-            // Check winning diagonals
-            // true = diagonal down
-            // false = diagonal up
-            checkWinnerDiagonal(true);
-            checkWinnerDiagonal(false);
 
             // Get winner's name
             const getWinner = () => winner;
@@ -149,16 +154,11 @@ function GameController(gameBoard) {
         // Ending the game if winner found or the board is filled without a winner
         const checkWinner = (winner) => {
             if(winner === false) {
-                if(round < (GameBoard.getSize()**2)) {
-                    updateBoard();
-                    switchPlayer();
-                } else {
-                    updateBoard();
-                    console.log("Draw!");
-                };
+                updateBoard();
+                switchPlayer();
             } else {
                 updateBoard();
-                console.log(`The winner is ${winner}!`)
+                console.log(winner);
             };
         };
 
