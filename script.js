@@ -24,8 +24,8 @@ function DisplayController(gameBoard) {
     const game = GameController(gameBoard);
     const container = document.querySelector(".board-container");
     const announcementText = document.querySelector(".announcement-text");
-    const playerOneScore = document.querySelector(".score-1");
-    const playerTwoScore = document.querySelector(".score-2");
+    // const playerOneScore = document.querySelector(".score-1");
+    // const playerTwoScore = document.querySelector(".score-2");
 
     announcementText.textContent = `${game.getActivePlayer().getName()}'s Turn!`
 
@@ -51,11 +51,14 @@ function DisplayController(gameBoard) {
                         // Add score to the winning player
                         game.getActivePlayer().addScore();
                         // Display the score
-                        playerOneScore.textContent = game.getPlayer()[0].getScore();
-                        playerTwoScore.textContent = game.getPlayer()[1].getScore();
+                        // playerOneScore.textContent = game.getPlayer()[0].getScore();
+                        // playerTwoScore.textContent = game.getPlayer()[1].getScore();
                         // Display the winning announcement text
                         announcementText.textContent = `${game.getWinner().getName()} wins!`;
                     }
+                    container.childNodes.forEach(element => {
+                        element.disabled = true;
+                    });
                 } else {
                     // Display player turns
                     announcementText.textContent = `${game.getActivePlayer().getName()}'s Turn!`;
