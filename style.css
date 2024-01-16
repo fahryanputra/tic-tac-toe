@@ -15,6 +15,7 @@ body {
     background-color: #e5e5e5;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 2rem;
+    color: #292524;
 }
 
 header {
@@ -30,8 +31,32 @@ header > h2 {
 
 .content {
     display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
     height: 80vh;
+    padding: 0 2rem;
+}
+
+.scoreboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.name {
+    font-size: 24px;
+}
+
+.name > span {
+    font-weight: bold;
+}
+
+.score {
+    font-size: 60px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
 }
 
 .game-container {
@@ -39,6 +64,7 @@ header > h2 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 2rem;
 }
 
 .board-container {
@@ -50,9 +76,44 @@ header > h2 {
 
 .board-container > button {
     background-color: #e5e5e5;
-    font-size: 60px;
-    width: 8rem;
-    height: 8rem;
+    font-size: 140px;
+    width: 10rem;
+    height: 10rem;
+    border: 5px solid #292524;
+}
+
+.board-container > button:disabled {
+    color: #292524;
+}
+
+.board-container > .cell-00,
+.board-container > .cell-02, 
+.board-container > .cell-20, 
+.board-container > .cell-22 {
+    border: none;
+}
+
+.board-container > .cell-01, 
+.board-container > .cell-21 {
+    border-top: none;
+    border-bottom: none;
+}
+
+.board-container > .cell-10, 
+.board-container > .cell-12 {
+    border-left: none;
+    border-right: none;
+}
+
+.control-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.announcement-text {
+    font-size: 28px;
+    font-weight: bold;
 }
 
 footer {

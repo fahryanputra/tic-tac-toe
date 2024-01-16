@@ -23,11 +23,17 @@ const GameBoard = (function() {
 function DisplayController(gameBoard) {
     const game = GameController(gameBoard);
     const container = document.querySelector(".board-container");
+    const announcementText = document.querySelector(".announcement-text");
+    const playerOneScore = document.querySelector(".score-1");
+    const playerTwoScore = document.querySelector(".score-2");
+
+    announcementText.textContent = `${game.getActivePlayer().getName()}'s Turn!`
 
     for(let i = 0; i < gameBoard.length; i++) {
         for(let j = 0; j < gameBoard[i].length; j++) {
             // Display the game board
             const markerButton = document.createElement("button");
+            markerButton.setAttribute("class", `cell-${i}${j}`)
 
             markerButton.addEventListener("click", () => {
                 // Mark the board with player marker
@@ -39,8 +45,20 @@ function DisplayController(gameBoard) {
 
                 // Check for winner
                 if(game.getWinner() !== false) {
-                    const winnerText = document.querySelector(".winner-text");
-                    winnerText.textContent = game.getWinner();
+                    if(game.getWinner() === 0) {
+                        announcementText.textContent = "It's a tie!";
+                    } else {
+                        // Add score to the winning player
+                        game.getActivePlayer().addScore();
+                        // Display the score
+                        playerOneScore.textContent = game.getPlayer()[0].getScore();
+                        playerTwoScore.textContent = game.getPlayer()[1].getScore();
+                        // Display the winning announcement text
+                        announcementText.textContent = `${game.getWinner().getName()} wins!`;
+                    }
+                } else {
+                    // Display player turns
+                    announcementText.textContent = `${game.getActivePlayer().getName()}'s Turn!`;
                 };
             });
 
@@ -52,12 +70,16 @@ function DisplayController(gameBoard) {
 
 // Create createPlayer factory function
 function createPlayer(name, token, marker) {
-    // Method to getting player name and token
+    let score = 0;
+
+    // Method to getting player attributes
     const getName = () => name; 
     const getToken = () => token;
     const getMarker = () => marker;
+    const getScore = () => score;
+    const addScore = () => score++;
 
-    return {getName, getToken, getMarker};
+    return {getName, getToken, getMarker, getScore, addScore};
 };
 
 // Create GameController function
@@ -108,9 +130,9 @@ function GameController(gameBoard) {
                         isRow === true ? sum += array[i][j] : sum += array[j][i];
                     };
                     if(sum === array.length) {
-                        winner = `The winner is ${players[0].getName()}!`;
+                        winner = players[0];
                     } else if (sum === -array.length) {
-                        winner = `The winner is ${players[1].getName()}!`;
+                        winner = players[1];
                     }
                 };
             }
@@ -122,9 +144,9 @@ function GameController(gameBoard) {
                     isDown === true ? sum += array[i][i] : sum += array[(array.length - 1) - i][i];
                 }
                 if(sum === array.length) {
-                    winner = `The winner is ${players[0].getName()}!`;
+                    winner = players[0];
                 } else if (sum === -array.length) {
-                    winner = `The winner is ${players[1].getName()}!`;
+                    winner = players[1];
                 }
             }
             
@@ -143,7 +165,7 @@ function GameController(gameBoard) {
             }
             
             if((round === 9) && (winner === false)) {
-                winner = "Draw!";
+                winner = 0;
             }
 
 
@@ -175,8 +197,10 @@ function GameController(gameBoard) {
     const getActivePlayer = () => activePlayer;
     // Method to getting the winner
     const getWinner = () => winner;
+    // Get players
+    const getPlayer = () => players;
     
-    return {playRound, getActivePlayer, getWinner};
+    return {playRound, getActivePlayer, getWinner, getPlayer};
 };
 
 const gameBoard = GameBoard.getBoard();
