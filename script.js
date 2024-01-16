@@ -128,7 +128,7 @@ function GameController(gameBoard) {
                 }
             }
             
-            if(round < GameBoard.getSize() ** 2) {
+            if(round <= GameBoard.getSize() ** 2) {
                 // Check winning row and column
                 // true = horizontal
                 // false = vertical
@@ -140,7 +140,9 @@ function GameController(gameBoard) {
                 // false = diagonal up
                 checkWinnerDiagonal(true);
                 checkWinnerDiagonal(false);
-            } else {
+            }
+            
+            if((round === 9) && (winner === false)) {
                 winner = "Draw!";
             }
 
